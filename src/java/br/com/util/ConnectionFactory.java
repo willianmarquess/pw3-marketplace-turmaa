@@ -7,6 +7,8 @@ package br.com.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 /**
  *
@@ -21,5 +23,34 @@ public class ConnectionFactory{
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+    }
+    
+    private static void close(Connection con, 
+            Statement stmt, ResultSet rs) throws Exception{
+         try {
+            if(rs != null){
+                rs.close();
+            }
+            if(stmt != null){
+                stmt.close();
+            }
+            if(con != null){
+                con.close();
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+    public static void closeConnection(Connection con,
+            Statement stmt, ResultSet rs) throws Exception{
+        close(con, stmt, rs);
+    }
+    public static void closeConnection(Connection con,
+            Statement stmt) throws Exception{
+        close(con, stmt, null);
+    }
+    public static void closeConnection(Connection con)
+            throws Exception{
+        close(con, null, null);
     }
 }

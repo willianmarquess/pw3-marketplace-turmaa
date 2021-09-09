@@ -18,19 +18,20 @@ import java.util.List;
  * @author willi
  */
 public class UsuarioDAO {
+
     private Connection con;
-    
-    public UsuarioDAO(){
+
+    public UsuarioDAO() {
         try {
             this.con = ConnectionFactory.getConnection();
             System.out.println("Conectado com sucesso!");
         } catch (Exception e) {
             System.out.println("Problemas ao conectar com"
-                    + " o banco de dados"+e.getMessage());
+                    + " o banco de dados" + e.getMessage());
         }
     }
-    
-    public boolean cadastrar(Usuario usuario){
+
+    public boolean cadastrar(Usuario usuario) {
         PreparedStatement stmt = null;
         String sql = "insert into usuario(emai_usuario, senha_usuario, tipo_usuario, status_usuario) values (?, ?, ?, ?)";
         try {
@@ -42,27 +43,29 @@ public class UsuarioDAO {
             stmt.execute();
             return true;
         } catch (Exception e) {
-            System.out.println("Problemas ao cadastrar"+e.getMessage());
+            System.out.println("Problemas ao cadastrar" + e.getMessage());
             return false;
-        }finally{
+        } finally {
             try {
-                
+                ConnectionFactory.closeConnection(con, stmt);
             } catch (Exception e) {
+                System.out.println("Erro ao fechar conexão"
+                        +e.getMessage());
             }
         }
     }
-    
-    public List<Usuario> listarTodos(){
+
+    public List<Usuario> listarTodos() {
         List<Usuario> usuarios = new ArrayList<>();
         Usuario usuario = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         String sql = "select * from usuario";
-        
+
         try {
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 usuario = new Usuario();
                 usuario.setIdUsuario(rs.getInt("id_usuario"));
                 usuario.setEmailUsuario(rs.getString("email_usuario"));
@@ -72,6 +75,15 @@ public class UsuarioDAO {
                 usuarios.add(usuario);
             }
         } catch (Exception e) {
+            System.out.println("Problemas ao listar usuarios"
+                    +e.getMessage());
+        } finally {
+            try {
+                ConnectionFactory.closeConnection(con, stmt, rs);
+            } catch (Exception e) {
+                System.out.println("Erro ao fechar conexão"
+                        +e.getMessage());
+            }
         }
         return usuarios;
     }

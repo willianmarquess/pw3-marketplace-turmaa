@@ -5,6 +5,7 @@
  */
 package br.com.controller;
 
+import br.com.dao.UsuarioDAO;
 import br.com.model.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -36,13 +37,25 @@ public class CadastrarUsuario extends HttpServlet {
         
         String email;
         String senha;
+        boolean resultado = false;
         
         email = request.getParameter("email");
         senha = request.getParameter("senha");
         
         Usuario usuario = new Usuario(0, email, senha, "comum", true);
         
-        System.out.println("E-mail Usuário: "+usuario.getEmailUsuario());
+        try {
+            UsuarioDAO dao = new UsuarioDAO();
+            if(dao.cadastrar(usuario)){
+                resultado = true;
+            }
+            request.setAttribute("resultado", resultado);
+            request.getRequestDispatcher("cadastro-usuario.jsp")
+                    .forward(request, response);
+        } catch (Exception e) {
+            System.out.println("Problemas ao cadastrar usuário"
+                    +e.getMessage());
+        }
         
     }
 
