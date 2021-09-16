@@ -19,5 +19,13 @@
             <input type="password" id="senha" name="senha"><br><br>
             <button>Cadastrar</button>
         </form>
+        <% String resultado = (String) request.getAttribute("resultado"); %>
+        <%if(resultado != null){
+            if(resultado.equals("sucesso")){ %>
+            <h1>Cadastrado com sucesso!</h1>
+            <%}else{%>
+            <h1>Erro ao cadastrar!</h1>
+            <%}
+        }%>    
     </body>
 </html>

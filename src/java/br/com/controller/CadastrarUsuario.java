@@ -37,7 +37,7 @@ public class CadastrarUsuario extends HttpServlet {
         
         String email;
         String senha;
-        boolean resultado = false;
+        String resultado = "";
         
         email = request.getParameter("email");
         senha = request.getParameter("senha");
@@ -47,7 +47,7 @@ public class CadastrarUsuario extends HttpServlet {
         try {
             UsuarioDAO dao = new UsuarioDAO();
             if(dao.cadastrar(usuario)){
-                resultado = true;
+                resultado = "sucesso";
             }
             request.setAttribute("resultado", resultado);
             request.getRequestDispatcher("cadastro-usuario.jsp")
